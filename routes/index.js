@@ -1,9 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const indexController = require('../controllers/indexController')
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' })
-})
+router.get('/file', indexController.fileGet)
+router.post('/file', indexController.filePost)
 
 module.exports = router

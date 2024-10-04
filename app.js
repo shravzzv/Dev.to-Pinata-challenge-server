@@ -5,6 +5,7 @@ const logger = require('morgan')
 require('dotenv').config()
 
 require('./config/db.config')
+require('./config/pinata.config')
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
 
@@ -20,3 +21,8 @@ app.use('/', indexRouter)
 app.use('/users', usersRouter)
 
 module.exports = app
+
+// todo: create user routes and controllers
+// todo: create file routes and controllers
+// todo: create multer utils
+// todo: upload images to Pinata and store their urls in the database
