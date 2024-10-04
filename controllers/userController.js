@@ -4,16 +4,13 @@ const User = require('../models/user')
 const multerUtils = require('../utils/multer.util')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const pinata = require('../config/pinata.config')
-const fs = require('fs')
-const { Blob } = require('buffer')
 const { getUploadedUrl } = require('../utils/pinata.util')
 
 exports.signUp = [
   multerUtils.upload.single('file'),
 
   asyncHandler(async (req, res, next) => {
-    await getUploadedUrl(req.file)
+    if (req.file) req.uploadedUrl = await getUploadedUrl(req.file)
     next()
   }),
 
@@ -43,6 +40,7 @@ exports.signUp = [
     const newUser = new User({
       email,
       password,
+      profilePicUrl: req.uploadedUrl || '',
     })
 
     if (errors.isEmpty()) {

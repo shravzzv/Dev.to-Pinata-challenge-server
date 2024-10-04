@@ -11,7 +11,13 @@ exports.getUploadedUrl = asyncHandler(async (fileToUpload) => {
   })
 
   const upload = await pinata.upload.file(file)
-  console.log(upload)
 
   fs.unlink(fileToUpload.path, (err) => err && console.log(err))
+
+  const url = await pinata.gateways.createSignedURL({
+    cid: upload.cid,
+    expires: 5000000,
+  })
+
+  return url
 })
