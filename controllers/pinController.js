@@ -5,14 +5,21 @@ const multerUtils = require('../utils/multer.util')
 const { getUploadedUrl, deleteFile } = require('../utils/pinata.util')
 
 exports.pinsGet = asyncHandler(async (req, res) => {
-  // todo: Add sorting and filtering features
-  const pins = await Pin.find()
+  const { user } = req.query
+
+  const filter = {}
+  if (user) filter.user = user
+
+  const pins = await Pin.find(filter)
+    .populate('user')
+    .sort({ createdAt: -1, updatedAt: -1 })
+
   res.json(pins)
 })
 
 exports.pinGet = asyncHandler(async (req, res) => {
   const { id } = req.params
-  const pin = await Pin.findById(id)
+  const pin = await Pin.findById(id).populate('user')
   res.json(pin)
 })
 
