@@ -147,7 +147,9 @@ exports.pinDelete = asyncHandler(async (req, res) => {
   if (pin.user.id !== req.user.id)
     return res.status(401).send('You can delete your own pins only')
 
-  await deleteFile(pin.url)
+  // await deleteFile(pin.url)
+  // *: I'm preventing deletion from the Pinata because it doesn't store duplicates. Multiple posts might share the same image url.
+
   await Pin.findByIdAndDelete(id)
 
   res.send('pin deleted successfully')
