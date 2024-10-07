@@ -4,7 +4,7 @@ const { Blob } = require('buffer')
 const fs = require('fs')
 
 /**
- * Uploads a given image to Pinata and returns the uploaded url. The image is optimized
+ * Uploads a given image to Pinata and returns the uploaded url. The image is optimized using Pinata.
  */
 exports.getUploadedUrl = asyncHandler(async (fileToUpload) => {
   const blob = new Blob([fs.readFileSync(fileToUpload.path)])
@@ -23,8 +23,6 @@ exports.getUploadedUrl = asyncHandler(async (fileToUpload) => {
       expires: 5000000,
     })
     .optimizeImage({
-      width: 500,
-      height: 500,
       format: 'webp',
       fit: 'cover',
       gravity: 'auto',
