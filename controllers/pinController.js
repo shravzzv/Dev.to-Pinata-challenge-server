@@ -77,9 +77,66 @@ exports.pinPost = [
   }),
 ]
 
-exports.pinUpdate = asyncHandler(async (req, res) => {
-  res.send('file update not implemented')
-})
+exports.pinUpdate = [
+  multerUtils.upload.single('file'),
+
+  asyncHandler(async (req, res, next) => {
+    if (req.file) req.uploadedUrl = await getUploadedUrl(req.file)
+    next()
+  }),
+
+  body('title')
+    .trim()
+    .notEmpty()
+    .withMessage('Title must not be empty.')
+    .bail()
+    .isLength({ min: 3, max: 32 })
+    .withMessage('Title must be 3-32 characters long.')
+    .escape(),
+
+  body('description').trim().escape().optional(),
+
+  body('tags')
+    .trim()
+    .escape()
+    .optional()
+    .customSanitizer((value) =>
+      value
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter((tag) => tag)
+    ),
+
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req)
+    const { title, description, tags } = matchedData(req, {
+      onlyValidData: false,
+      includeOptionals: true,
+    })
+
+    const currentPin = await Pin.findById(req.params.id).populate('user')
+
+    if (!currentPin) return res.status(400).send('Pin not found')
+
+    if (currentPin.user.id !== req.user.id)
+      return res.status(401).send('You can update your own pins only')
+
+    const updatedPin = new Pin({
+      ...currentPin._doc,
+      title,
+      description,
+      tags,
+    })
+
+    if (errors.isEmpty()) {
+      await Pin.findByIdAndUpdate(req.params.id, updatedPin)
+
+      res.send('Pin updated successfully')
+    } else {
+      res.status(401).json(errors.array())
+    }
+  }),
+]
 
 exports.pinDelete = asyncHandler(async (req, res) => {
   const { id } = req.params
