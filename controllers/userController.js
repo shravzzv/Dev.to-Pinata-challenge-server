@@ -115,6 +115,10 @@ exports.userUpdate = [
 
 exports.userDelete = asyncHandler(async (req, res) => {
   const { id } = req.params
+
+  if (id !== req.user.id)
+    return res.status(401).send('You can delete your own account only.')
+
   const user = await User.findById(id)
   const imageUrl = user.profilePicUrl
 
