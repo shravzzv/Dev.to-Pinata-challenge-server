@@ -116,11 +116,10 @@ exports.userUpdate = [
 exports.userDelete = asyncHandler(async (req, res) => {
   const { id } = req.params
   const user = await User.findById(id)
-
   const imageUrl = user.profilePicUrl
 
   await deleteFile(imageUrl)
   await User.findByIdAndDelete(id)
+
   res.send('user deleted successfully')
-  // todo: figure out how to delete image from Pinata when deleting the user
 })
