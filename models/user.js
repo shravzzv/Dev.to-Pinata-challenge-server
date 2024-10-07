@@ -5,7 +5,6 @@ const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   profilePicUrl: { type: String, default: '' },
-  createdPins: [{ type: Schema.Types.ObjectId, ref: 'Pin' }],
   savedPins: [{ type: Schema.Types.ObjectId, ref: 'Pin' }],
 })
 
