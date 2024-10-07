@@ -4,7 +4,7 @@ const User = require('../models/user')
 const multerUtils = require('../utils/multer.util')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const { getUploadedUrl } = require('../utils/pinata.util')
+const { getUploadedUrl, deleteFile } = require('../utils/pinata.util')
 
 exports.signUp = [
   multerUtils.upload.single('file'),
@@ -100,3 +100,27 @@ exports.signIn = [
     }
   }),
 ]
+
+exports.userGet = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  const user = await User.findById(id)
+  res.json(user)
+})
+
+exports.userUpdate = [
+  asyncHandler(async (req, res) => {
+    res.send('user update not implemented')
+  }),
+]
+
+exports.userDelete = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  const user = await User.findById(id)
+
+  const imageUrl = user.profilePicUrl
+
+  await deleteFile(imageUrl)
+  await User.findByIdAndDelete(id)
+  res.send('user deleted successfully')
+  // todo: figure out how to delete image from Pinata when deleting the user
+})
