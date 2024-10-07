@@ -76,9 +76,11 @@ exports.pinUpdate = asyncHandler(async (req, res) => {
 
 exports.pinDelete = asyncHandler(async (req, res) => {
   const { id } = req.params
-  const pin = await Pin.findById(id)
+  const pin = await Pin.findById(id).populate('user')
 
-  if (pin.user !== req.user.id)
+  if (!pin) return res.status(400).send('Pin not found')
+
+  if (pin.user.id !== req.user.id)
     return res.status(401).send('You can delete your own pins only')
 
   await deleteFile(pin.url)
