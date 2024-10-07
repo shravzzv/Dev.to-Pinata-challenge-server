@@ -6,8 +6,8 @@ require('dotenv').config()
 
 require('./config/db.config')
 require('./config/pinata.config')
-const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
+const pinsRouter = require('./routes/pins')
 
 const app = express()
 
@@ -17,12 +17,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', indexRouter)
 app.use('/users', usersRouter)
+app.use('/pins', pinsRouter)
 
 module.exports = app
-
-// todo: create user routes and controllers
-// todo: create file routes and controllers
-// todo: create multer utils
-// todo: upload images to Pinata and store their urls in the database
