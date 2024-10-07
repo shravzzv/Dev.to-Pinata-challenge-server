@@ -5,6 +5,7 @@ const multerUtils = require('../utils/multer.util')
 const { getUploadedUrl, deleteFile } = require('../utils/pinata.util')
 
 exports.pinsGet = asyncHandler(async (req, res) => {
+  // todo: Add sorting and filtering features
   const pins = await Pin.find()
   res.json(pins)
 })
@@ -74,5 +75,14 @@ exports.pinUpdate = asyncHandler(async (req, res) => {
 })
 
 exports.pinDelete = asyncHandler(async (req, res) => {
-  res.send('file delete not implemented')
+  const { id } = req.params
+  const pin = await Pin.findById(id)
+
+  if (pin.user !== req.user.id)
+    return res.status(401).send('You can delete your own pins only')
+
+  await deleteFile(pin.url)
+  await Pin.findByIdAndDelete(id)
+
+  res.send('pin deleted successfully')
 })
