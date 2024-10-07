@@ -32,6 +32,7 @@ exports.getUploadedUrl = asyncHandler(async (fileToUpload) => {
 
   return url
 })
+// !problem: Prevent deletion of shared files. Pinata automatically recognizes duplicate files and prevents duplicates.
 
 /**
  * Deleted a file from Pinata.

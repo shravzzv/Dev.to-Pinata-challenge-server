@@ -107,6 +107,7 @@ exports.userGet = asyncHandler(async (req, res) => {
   res.json(user)
 })
 
+// *: I'm skipping user update now.
 exports.userUpdate = [
   asyncHandler(async (req, res) => {
     res.send('user update not implemented')
@@ -116,7 +117,7 @@ exports.userUpdate = [
 exports.userDelete = asyncHandler(async (req, res) => {
   const { id } = req.params
 
-  if (id !== req.user.id)
+  if (id !== req?.user?.id)
     return res.status(401).send('You can delete your own account only.')
 
   const user = await User.findById(id)
