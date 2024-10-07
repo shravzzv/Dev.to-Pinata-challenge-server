@@ -5,11 +5,14 @@ const multerUtils = require('../utils/multer.util')
 const { getUploadedUrl, deleteFile } = require('../utils/pinata.util')
 
 exports.pinsGet = asyncHandler(async (req, res) => {
-  res.send('files get not implemented')
+  const pins = await Pin.find()
+  res.json(pins)
 })
 
 exports.pinGet = asyncHandler(async (req, res) => {
-  res.send('file get not implemented')
+  const { id } = req.params
+  const pin = await Pin.findById(id)
+  res.json(pin)
 })
 
 exports.pinPost = [
