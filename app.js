@@ -5,8 +5,9 @@ const logger = require('morgan')
 require('dotenv').config()
 
 require('./config/db.config')
-const indexRouter = require('./routes/index')
+require('./config/pinata.config')
 const usersRouter = require('./routes/users')
+const pinsRouter = require('./routes/pins')
 
 const app = express()
 
@@ -16,7 +17,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', indexRouter)
 app.use('/users', usersRouter)
+app.use('/pins', pinsRouter)
 
 module.exports = app
