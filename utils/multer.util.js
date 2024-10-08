@@ -4,6 +4,7 @@ const path = require('path')
 const fs = require('fs')
 
 // create an uploads folder if not already present
+if (!fs.existsSync('./public')) fs.mkdirSync('./public')
 if (!fs.existsSync('./public/uploads')) fs.mkdirSync('./public/uploads')
 
 const multerStorage = multer.diskStorage({
