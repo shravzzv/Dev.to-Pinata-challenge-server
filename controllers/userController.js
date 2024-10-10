@@ -52,7 +52,7 @@ exports.signUp = [
         expiresIn: '7d',
       })
 
-      res.json({ token })
+      res.json({ token, userId: newUser.id })
     } else {
       res.status(401).json(errors.array())
     }
@@ -94,7 +94,7 @@ exports.signIn = [
         expiresIn: '7d',
       })
 
-      res.json({ token })
+      res.json({ token, userId: req.user.id })
     } else {
       res.status(401).json(errors.array())
     }
