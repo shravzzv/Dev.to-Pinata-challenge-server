@@ -13,4 +13,6 @@ router.put('/:id', protect, pinController.pinUpdate)
 
 router.delete('/:id', protect, pinController.pinDelete)
 
+router.post('/search', protect, pinController.search)
+
 module.exports = router
