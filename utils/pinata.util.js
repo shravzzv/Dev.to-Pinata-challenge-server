@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const pinata = require('../config/pinata.config')
-const { Blob } = require('buffer')
+const { Blob, File } = require('buffer')
 const fs = require('fs')
 
 /**
