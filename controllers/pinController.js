@@ -154,3 +154,32 @@ exports.pinDelete = asyncHandler(async (req, res) => {
 
   res.send('pin deleted successfully')
 })
+
+exports.search = [
+  body('searchQuery')
+    .trim()
+    .escape()
+    .isLength({ min: 1, max:32 })
+    .withMessage('Search query cannot be empty. It should be 1-32 characters long.'),
+
+  asyncHandler(async (req, res) => {
+    const errors = validationResult(req)
+    const sanitizedData = matchedData(req)
+
+    if (errors.isEmpty()) {
+      const messages = await Pin.aggregate().search({
+        index: process.env.MONGO_ATLAS_SEARCH_INDEX,
+        text: {
+          query: sanitizedData.searchQuery,
+          path: {
+            wildcard: '*',
+          },
+        },
+      })
+
+      res.json(messages)
+    } else {
+      res.json(errors.array())
+    }
+  }),
+]
