@@ -159,8 +159,8 @@ exports.search = [
   body('searchQuery')
     .trim()
     .escape()
-    .isLength({ min: 1 })
-    .withMessage('Search query cannot be empty'),
+    .isLength({ min: 1, max:32 })
+    .withMessage('Search query cannot be empty. It should be 1-32 characters long.'),
 
   asyncHandler(async (req, res) => {
     const errors = validationResult(req)
