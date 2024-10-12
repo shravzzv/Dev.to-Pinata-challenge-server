@@ -1,8 +1,9 @@
 const asyncHandler = require('express-async-handler')
 const { body, validationResult, matchedData } = require('express-validator')
 const Pin = require('../models/pin')
+const User = require('../models/user')
 const multerUtils = require('../utils/multer.util')
-const { getUploadedUrl, deleteFile } = require('../utils/pinata.util')
+const { getUploadedUrl } = require('../utils/pinata.util')
 
 exports.pinsGet = asyncHandler(async (req, res) => {
   const { user } = req.query
@@ -159,8 +160,10 @@ exports.search = [
   body('searchQuery')
     .trim()
     .escape()
-    .isLength({ min: 1, max:32 })
-    .withMessage('Search query cannot be empty. It should be 1-32 characters long.'),
+    .isLength({ min: 1, max: 32 })
+    .withMessage(
+      'Search query cannot be empty. It should be 1-32 characters long.'
+    ),
 
   asyncHandler(async (req, res) => {
     const errors = validationResult(req)
@@ -183,3 +186,18 @@ exports.search = [
     }
   }),
 ]
+
+/**
+ * Adds a pin to the user's savedPins field.
+ */
+exports.pinSave = asyncHandler(async (req, res) => {
+  const { id } = req.params
+
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    { $push: { savedPins: id } },
+    { new: true }
+  )
+
+  res.json(updatedUser)
+})
