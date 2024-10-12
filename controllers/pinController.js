@@ -187,15 +187,24 @@ exports.search = [
   }),
 ]
 
-/**
- * Adds a pin to the user's savedPins field.
- */
 exports.pinSave = asyncHandler(async (req, res) => {
   const { id } = req.params
 
   const updatedUser = await User.findByIdAndUpdate(
     req.user.id,
     { $push: { savedPins: id } },
+    { new: true }
+  )
+
+  res.json(updatedUser)
+})
+
+exports.pinUnSave = asyncHandler(async (req, res) => {
+  const { id } = req.params
+
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    { $pull: { savedPins: id } },
     { new: true }
   )
 

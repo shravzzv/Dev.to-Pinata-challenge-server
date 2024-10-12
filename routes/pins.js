@@ -17,4 +17,6 @@ router.post('/search', protect, pinController.search)
 
 router.post('/save/:id', protect, pinController.pinSave)
 
+router.post('/unsave/:id', protect, pinController.pinUnSave)
+
 module.exports = router
