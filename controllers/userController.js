@@ -103,7 +103,7 @@ exports.signIn = [
 
 exports.userGet = asyncHandler(async (req, res) => {
   const { id } = req.params
-  const user = await User.findById(id)
+  const user = await User.findById(id).populate('savedPins')
   res.json(user)
 })
 
